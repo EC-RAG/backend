@@ -1,3 +1,4 @@
+
 CREATE USER 'tbjuechen'@'%' IDENTIFIED BY 'a20030613';
 GRANT ALL PRIVILEGES ON *.* TO 'tbjuechen'@'%';
 

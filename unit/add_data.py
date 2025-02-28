@@ -14,7 +14,7 @@ def get_csv(file_name:str):
     '''
     file_name: str  文件名
     '''
-    PATH = os.path.join('tools', 'data', file_name)
+    PATH = os.path.join('unit', 'data', file_name)
     with open(PATH, 'r', encoding='utf-8') as f:
         data = pd.read_csv(f)
     return data
