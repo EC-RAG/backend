@@ -1,6 +1,8 @@
 import os
 import sys
 
+
+
 # 获取当前脚本所在目录的上级目录
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from vdb import client, Item, embedding
@@ -20,5 +22,5 @@ for data in datas:
 # try
 query = '概览数据(月)'
 query_embedding = embedding(query)
-result = collection.query(query_embedding)
+result = collection.query(query_embedding, n_results=1)
 print(result)

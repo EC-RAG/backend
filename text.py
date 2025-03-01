@@ -1,10 +1,4 @@
-from tools.mysql import MysqlTool
+from tools.get_table_name import get_table_name
 
-from sqlalchemy import text
 
-test = MysqlTool()
-
-query = text('select * from summary_data_day')
-
-for row in test._run(query):
-    print(row)
+print(get_table_name('概览数据（日）'))

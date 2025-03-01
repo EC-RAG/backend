@@ -5,7 +5,7 @@ import chromadb
 from pathlib import Path
 from typing import Callable
 
-from embedding import embedding
+from .embedding import embedding
 
 
 db_file = 'chromadb.db'
