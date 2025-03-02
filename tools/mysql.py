@@ -2,7 +2,7 @@ from langchain.agents import tool
 
 from db.base import SessionLocal
 
-@tool(name='execute_sql', description='execute sql')
+@tool(description='执行sql语句')
 def execute_sql(sql:str):
     try:
         db = SessionLocal()
