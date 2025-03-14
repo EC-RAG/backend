@@ -1,10 +1,9 @@
 import sys
 import os
 
-# 获取当前脚本所在目录的上级目录
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from db.base import SessionLocal, Base, engine
+from db.mysql.base import SessionLocal, Base, engine
 from models.model import Summary_Data_Day
 import pandas as pd
 
@@ -14,7 +13,7 @@ def get_csv(file_name:str):
     '''
     file_name: str  文件名
     '''
-    PATH = os.path.join('unit', 'data', file_name)
+    PATH = os.path.join('init_scripts', 'sqldata','data', file_name)
     with open(PATH, 'r', encoding='utf-8') as f:
         data = pd.read_csv(f)
     return data

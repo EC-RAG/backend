@@ -1,6 +1,6 @@
 from langchain.agents import tool
 
-from db.base import SessionLocal
+from db.mysql.base import SessionLocal
 
 @tool(description='执行sql语句')
 def execute_sql(sql:str):

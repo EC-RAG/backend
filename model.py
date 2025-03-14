@@ -1,5 +1,5 @@
 from chains import table_name_chain, field_name_chain
-from tools import table_name_tool
+from chains.tools import table_name_tool
 from chains.documents import database_document
 
 def get_table_name(query:str):

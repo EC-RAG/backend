@@ -1,4 +1,4 @@
-from vectordatabase.vdb import client, embedding
+from db.vectordatabase.vdb import client, embedding
 from langchain.agents import tool
 
 @tool(description='通过大模型提取表明，在向量数据库中查询')

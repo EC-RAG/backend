@@ -1,15 +1,10 @@
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
 from langchain.chains.llm import LLMChain
 
-from documents import database_document
+from .documents import database_document
+from .llms.deepseek import llm
 import json
 
-llm = ChatOpenAI(
-    base_url='https://api.deepseek.com/v1',
-    api_key = 'sk-4ebf64a872724ab19c6ae5f0c6707af7',
-    model='deepseek-chat'
-)
 
 prompt = PromptTemplate(
     input_variables=['query' ,'name' ,'text', 'important', 'knowledge'],

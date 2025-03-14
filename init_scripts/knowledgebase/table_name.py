@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from vectordatabase.vdb import client, Item, embedding
+from db.vectordatabase.vdb import client, Item, embedding
 
 collection = client.get_or_create_collection('table_name')
 

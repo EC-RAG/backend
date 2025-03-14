@@ -169,3 +169,5 @@ main.exe
 release/
 
 /__pycache__
+
+config.yaml

@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, N
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from db.base import Base
+from db.mysql.base import Base
 
 class Summary_Data_Day(Base):
     __tablename__ = 'summary_data_day'

@@ -5,10 +5,12 @@ import chromadb
 from pathlib import Path
 from typing import Callable
 
+from utils.config import config
+
 from .embedding import embedding
 
 
-db_file = 'chromadb.db'
+db_file = config['database']['chromadb']['name']
 
 client = chromadb.PersistentClient(path=db_file)
 
