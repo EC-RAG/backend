@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from db.mysql.base import SessionLocal, Base, engine
-from models.model import Summary_Data_Day
+from db.mysql.models.model import Summary_Data_Day
 import pandas as pd
 
 db = SessionLocal()

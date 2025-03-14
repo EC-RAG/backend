@@ -171,3 +171,6 @@ release/
 /__pycache__
 
 config.yaml
+
+*.db/
+*.db

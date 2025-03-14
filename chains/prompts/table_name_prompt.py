@@ -1,6 +1,6 @@
 from langchain.prompts import PromptTemplate
 
-prompt = PromptTemplate(
+table_name_prompt = PromptTemplate(
     input_variables=["query"],
     template='''
     <system>
