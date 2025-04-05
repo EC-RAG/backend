@@ -1,4 +1,3 @@
-from langchain.prompts import PromptTemplate
 from langchain.chains.llm import LLMChain
 
 from .llms.deepseek import llm

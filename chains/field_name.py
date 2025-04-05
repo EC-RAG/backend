@@ -40,15 +40,15 @@ field_name_chain = LLMChain(
     prompt=prompt
 )
 
-# test
-response = field_name_chain.invoke({
-    'query': '查询数据日表每天直播时长和带货金额的联系',
-    'name': database_document['summary_data_day']['name'],
-    'text': database_document['summary_data_day']['text'],
-    'important': database_document['summary_data_day']['important'],
-    'knowledge': database_document['summary_data_day']['knowledge']
-})
-print(response['text'])
+# # test
+# response = field_name_chain.invoke({
+#     'query': '查询数据日表每天直播时长和带货金额的联系',
+#     'name': database_document['summary_data_day']['name'],
+#     'text': database_document['summary_data_day']['text'],
+#     'important': database_document['summary_data_day']['important'],
+#     'knowledge': database_document['summary_data_day']['knowledge']
+# })
+# print(response['text'])
 
-data = json.loads(response['text'])
-print(data)
+# data = json.loads(response['text'])
+# print(data)
