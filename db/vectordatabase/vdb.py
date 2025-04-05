@@ -57,5 +57,6 @@ class BaseCollection(ABC):
     def delete(self, ids:str):
         self._delete(ids)
 
-    def get(self, ids:str):
-        return self.collection.get(ids=ids)
+    def get(self, **kwargs):
+        kwargs['include'] = ['embeddings', 'documents', 'metadatas'] if 'include' not in kwargs else kwargs['include']
+        return self.collection.get(**kwargs)

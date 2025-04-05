@@ -9,5 +9,6 @@ table_name_collection:BaseCollection = create_collection_class(
     "table_name",
     {
         "add": lambda self, ids, document: self._add(Item(ids, document, metadata={"type": "table_name", "table": document})),
+        "get_all": lambda self, table_name: self.get(where={"table": table_name})
     }
 )(client)
