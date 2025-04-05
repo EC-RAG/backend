@@ -3,22 +3,22 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..")))
 
-from db.vectordatabase.vdb import client, Item, embedding
-
-collection = client.get_or_create_collection('table_name')
+from db.vectordatabase import table_name_collection, embedding
 
 datas = [
-    Item(ids='概览数据（日）', documents='summary_data_day'),
-    Item(ids='概览数据日表', documents='summary_data_day'),
-    Item(ids='概览数据(月)', documents='summary_data_month'),
-    Item(ids='概览数据月表', documents='summary_data_month'),
+    {'ids': '概览数据（日）', 'document': 'summary_data_day'},
+    {'ids': '概览数据日表', 'document': 'summary_data_day'},
+    {'ids': '概览数据(月)', 'document': 'summary_data_month'},
+    {'ids': '概览数据月表', 'document': 'summary_data_month'},
 ]
 
 for data in datas:
-    collection.add(**data.to_dict())
+    table_name_collection.add(**data)
 
-# try
-query = '概览数据(月)'
-query_embedding = embedding(query)
-result = collection.query(query_embedding, n_results=1)
-print(result)
+
+print(table_name_collection.get(ids=["概览数据（日）"]))
+# print(embedding.embedding("概览数据（日）"))
+# query = '概览数据月'
+# query_embedding = embedding.embedding(query)
+# result = table_name_collection.query(query_embedding, n_results=3)
+# print(result)
