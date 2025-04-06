@@ -37,6 +37,7 @@ class BaseCollection(ABC):
         self.collection:chromadb.Collection = self.client.get_or_create_collection(name)
 
     def _add(self, item:Item):
+        # check if id already exists
         self.get(ids=item.ids)
         if len(self.collection.get(ids=item.ids)['ids']) > 0:
             raise ValueError(f"Item with id {item.ids} already exists in the collection.")
@@ -51,8 +52,8 @@ class BaseCollection(ABC):
     def add(self, item:Item):
         self._add(item)
 
-    def query(self, query_embedding, n_results:int=1):
-        return self._query(query_embedding, n_results=n_results)
+    def query(self, query:str, n_results:int=1):
+        return self._query(embedding(query), n_results=n_results)
     
     def delete(self, ids:str):
         self._delete(ids)
