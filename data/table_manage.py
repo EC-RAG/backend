@@ -59,8 +59,6 @@ def get_table_alias(table_name:str):
         table_alias = table_name_collection.get_all(table_name)
     except Exception as e:
         print(e)
-    finally:
-        table_name_collection.close()
     return table_alias
 
 def update_table_info(table_name:str, table_define_sql:str, table_field_info:str)->bool:
@@ -73,3 +71,27 @@ def update_table_info(table_name:str, table_define_sql:str, table_field_info:str
     finally:
         cursor.close()
     return True
+
+def get_all_table_alias_in_vdb():
+    try:
+        table_alias = table_name_collection.get()
+        items = []
+        for i in range(len(table_alias['ids'])):
+            item = {
+                'id': table_alias['ids'][i],
+                'embedding': table_alias['embeddings'][i],
+                'document': table_alias['documents'][i],
+                'metadata': table_alias['metadatas'][i],
+            }
+            items.append(item)
+    except Exception as e:
+        print(e)
+    return items
+
+def get_all_table_invdb():
+    try:
+        table_alias = table_name_collection.get(include = ['documents'])
+        tables = list(set(table_alias['documents']))
+    except Exception as e:
+        print(e)    
+    return tables
