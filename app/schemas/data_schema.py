@@ -10,3 +10,13 @@ class TableAlias(BaseModel):
     embedding: list[float]
     document: str
     metadata: dict
+
+class AliasQuery(BaseModel):
+    query: str
+    top_k: int
+
+class TableAliasResponse(BaseModel):
+    id: str
+    distance: float
+    document: str
+    metadata: dict

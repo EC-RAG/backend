@@ -57,9 +57,18 @@ def remove_table_info(table_name:str)->bool:
 def get_table_alias(table_name:str):
     try:
         table_alias = table_name_collection.get_all(table_name)
+        items = []
+        for i in range(len(table_alias['ids'])):
+            item = {
+                'id': table_alias['ids'][i],
+                'embedding': table_alias['embeddings'][i],
+                'document': table_alias['documents'][i],
+                'metadata': table_alias['metadatas'][i],
+            }
+            items.append(item)
     except Exception as e:
         print(e)
-    return table_alias
+    return items
 
 def update_table_info(table_name:str, table_define_sql:str, table_field_info:str)->bool:
     try:

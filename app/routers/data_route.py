@@ -1,14 +1,15 @@
 from typing import List
 from fastapi import APIRouter, Depends, Query, Path, Response
 
-from ..schemas.data_schema import TableData
+from ..schemas.data_schema import TableData, TableAlias, AliasQuery, TableAliasResponse
 
 import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from data.table_manage import get_all_table, add_table_info, remove_table_info, update_table_info, get_all_table_alias_in_vdb, get_all_table_invdb
+from data.table_manage import get_all_table, add_table_info, remove_table_info, update_table_info, get_all_table_alias_in_vdb, \
+    get_all_table_invdb, get_table_alias, table_name_collection
 
 data_router = APIRouter(prefix="/data")
 
@@ -52,7 +53,7 @@ async def get_table(table_name: str = Query(..., description="Table name to get"
         return Response(content=e.__str__, status_code=500)
     return target_tables
 
-@data_router.get("/gettablefield", tags=["data"])
+@data_router.get("/allalias", response_model=List[TableAlias], tags=["data"])
 async def get_table_field():
     try:
         table_alias = get_all_table_alias_in_vdb()
@@ -67,3 +68,43 @@ async def get_table_tags():
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return tags
+
+@data_router.get("/gettablealias", response_model=List[TableAlias], tags=["data"])
+async def table_alias(table_name: str = Query(..., description="Table name to get alias")):
+    try:
+        table_alias = get_table_alias(table_name)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return table_alias
+
+@data_router.get("/rmalias", tags=["data"])
+async def remove_alias(table_name: str = Query(..., description="Table name to remove alias")):
+    try:
+        table_name_collection.delete(table_name)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return True
+
+@data_router.get("/addalias", tags=["data"])
+async def add_alias(table_name: str = Query(..., description="Table name to add alias"),
+                    table_alias: str = Query(..., description="Table alias")):
+    try:
+        table_name_collection.add(table_name, table_alias)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return True
+
+@data_router.get("/aliasquery", response_model=List[TableAliasResponse],tags=["data"])
+async def alias_query(query: str = Query(..., description="Query to search for table alias"),
+                      top_k: int = Query(2, description="Number of top results to return")):
+    query_result = table_name_collection.query(query, n_results=top_k)
+    items = []
+    for i in range(len(query_result['ids'][0])):
+        item = {
+            'id': query_result['ids'][0][i],
+            'distance': query_result['distances'][0][i],
+            'document': query_result['documents'][0][i],
+            'metadata': query_result['metadatas'][0][i],
+        }
+        print(item)
+    return items
