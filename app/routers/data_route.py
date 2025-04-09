@@ -106,5 +106,5 @@ async def alias_query(query: str = Query(..., description="Query to search for t
             'document': query_result['documents'][0][i],
             'metadata': query_result['metadatas'][0][i],
         }
-        print(item)
+        items.append(item)
     return items

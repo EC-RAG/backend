@@ -1,0 +1,1 @@
+from .data import dicts_to_markdown_table

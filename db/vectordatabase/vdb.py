@@ -34,7 +34,8 @@ class BaseCollection(ABC):
     def __init__(self, name:str, client:chromadb.PersistentClient):
         self.name = name
         self.client:chromadb.ClientAPI = client
-        self.collection:chromadb.Collection = self.client.get_or_create_collection(name)
+        self.collection:chromadb.Collection = self.client.get_or_create_collection(name, metadata={
+            'hnsw:space': 'cosine',})
 
     def _add(self, item:Item):
         # check if id already exists
