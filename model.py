@@ -1,9 +1,13 @@
-from chains import table_name_chain, field_name_chain, sql_generate_chain
+from chains import table_name_chain, field_name_chain, sql_generate_chain, graph_type_chain
 from chains.tools import table_name_tool
 from chains.documents import database_document
 from chains.tools import execute_sql
 from utils.table_info import get_table_info
 from utils import dicts_to_markdown_table
+
+from data import load_data_to_df
+
+import pandas as pd
 
 def get_table_name(query:str):
     llm_response = table_name_chain.invoke({
@@ -43,4 +47,19 @@ def generate_sql(query:str, table_name:str):
         'table_field_info': table_info['table_field_info'],
     })
     return llm_response['text']
+
+
+def load_data(table_name:str, sql:str):
+    try:
+        data = load_data_to_df(sql)
+        return data
+    except Exception as e:
+        print(e)
+        return None
     
+def generate_graph(query:str, data:pd.DataFrame):
+    llm_response = graph_type_chain.invoke({
+        'query': query,
+        'data_schema': data
+    })
+    return llm_response['text']
