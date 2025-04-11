@@ -48,5 +48,12 @@ graph_type_prompt = PromptTemplate(
     - 数据类型和用途
     - 图表说明中的建议
     </assistant>
+
+    <important>
+    1. 已知数据以dataframe的格式存储在变量data中
+    2. 使用Plotly Express库进行可视化
+    3. 回答中只需要给出代码，无需解释，也不需要markdown格式标记
+    4. 生成的图表对象名为fig，无需调用show()方法
+    </important>
     """
 )

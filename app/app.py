@@ -2,11 +2,12 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from .routers import data_router
+from .routers import data_router, graph_router
 
 app = FastAPI(openapi_prefix="/api")
 
 app.include_router(data_router)
+app.include_router(graph_router)
 
 app.add_middleware(
     CORSMiddleware,

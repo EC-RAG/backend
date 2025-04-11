@@ -60,6 +60,11 @@ def load_data(table_name:str, sql:str):
 def generate_graph(query:str, data:pd.DataFrame):
     llm_response = graph_type_chain.invoke({
         'query': query,
-        'data_schema': data
+        'data_schema': data.head()
     })
-    return llm_response['text']
+    context = {
+        'data':data,
+        'fig': None
+    }
+    exec(llm_response['text'], context)
+    return context['fig'].to_plotly_json()

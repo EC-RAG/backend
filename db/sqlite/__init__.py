@@ -1,6 +1,6 @@
 import sqlite3
 # 连接到 SQLite 数据库（如果文件不存在，则创建）
-conn = sqlite3.connect("server.db")
+conn = sqlite3.connect("server.db", check_same_thread=False)
 # 创建游标（Cursor）对象
 cursor = conn.cursor()
 
