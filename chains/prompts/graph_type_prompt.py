@@ -54,6 +54,8 @@ graph_type_prompt = PromptTemplate(
     2. 使用Plotly Express库进行可视化
     3. 回答中只需要给出代码，无需解释，也不需要markdown格式标记
     4. 生成的图表对象名为fig，无需调用show()方法
+    5. 请导入必要的库
+    6. 如果是数值类数据，请确保横纵坐标按序列排列
     </important>
     """
 )

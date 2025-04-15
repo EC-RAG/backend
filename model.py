@@ -65,5 +65,6 @@ async def generate_graph(query:str, data:pd.DataFrame):
         'data':data,
         'fig': None
     }
+    print('llm_response', llm_response)
     exec(llm_response, context)
     return context['fig'].to_plotly_json()

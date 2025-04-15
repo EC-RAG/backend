@@ -16,7 +16,7 @@ graph_router = APIRouter(prefix="/graph")
 # def gen_graph(query: str = Query(..., description="Query string to search for"),):
     
 
-#     query = '查询奥利奥官方旗舰店的日销售额'
+#     query = ' '
 #     table_name = get_table_name(query)
 #     sql = generate_sql(query, table_name)
 #     data = load_data(table_name, sql)
@@ -30,14 +30,14 @@ async def gen_graph(ws: WebSocket):
     try:
         query = await ws.receive_text()
         table_name = await get_table_name(query)
-        await ws.send_json({"table_name": table_name})
+        await ws.send_json({"type":'table_name',"data": table_name})
         sql = await generate_sql(query, table_name)
-        await ws.send_json({"sql": sql})
+        await ws.send_json({"type":'sql',"data": sql})
         data = load_data(table_name, sql)
-        await ws.send_json({"data": data.head().to_json(orient="records", force_ascii=False)})
+        await ws.send_json({"type":'data',"data": {"data": data.head().to_dict()}})
         res = await generate_graph(query, data)
         res = convert_array_to_list(res)
-        await ws.send_json(res)
+        await ws.send_json({"type": 'graph', "data": res})
     except Exception as e:
         raise e
     finally:

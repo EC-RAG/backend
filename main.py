@@ -9,7 +9,14 @@
 # mian()
 import uvicorn
 
+import os
+os.environ["LANGCHAIN_API_DISABLED"] = "true"
+
 from app.app import app
+
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True, workers=5)
