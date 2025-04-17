@@ -4,7 +4,7 @@ import uvicorn
 
 from .routers import data_router, graph_router
 
-app = FastAPI(openapi_prefix="/api")
+app = FastAPI(root_path="/api")
 
 app.include_router(data_router)
 app.include_router(graph_router)

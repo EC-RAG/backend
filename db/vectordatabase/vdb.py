@@ -13,7 +13,7 @@ from .embedding import embedding
 
 db_file = config['database']['chromadb']['name']
 
-client = chromadb.PersistentClient(path=db_file)
+client = chromadb.PersistentClient(path=db_file, settings=chromadb.Settings(anonymized_telemetry=False))
 
 class Item:
     def __init__(self,ids:str ,documents:str ,embedding:Callable=embedding, metadata:dict=None):
