@@ -175,4 +175,4 @@ config.yaml
 *.db/
 *.db
 
-./frontend
+frontend
