@@ -10,9 +10,12 @@ def get_tag():
     url = 'https://api.github.com/repos/EC-RAG/frontend/tags'
     response = requests.get(url)
     tags = response.json()
-    if tags:
-        return tags[0]['name']
-    return 'v1.0.2'
+    # print(tags)
+    try:
+        if tags:
+            return tags[0]['name']
+    except Exception as e:
+        return 'v1.0.2'
 
 def download_frontend(tag):
     '''
