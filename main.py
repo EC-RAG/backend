@@ -12,6 +12,10 @@ import uvicorn
 import os
 os.environ["LANGCHAIN_API_DISABLED"] = "true"
 
+from utils.load import check_frontend
+
+check_frontend()
+
 from app.app import app
 
 from fastapi.staticfiles import StaticFiles
