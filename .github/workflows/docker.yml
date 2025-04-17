@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: EC-RAG
+  IMAGE_NAME: ${{ github.repository_owner }}/ec-rag
 
 jobs:
   build-and-push:
