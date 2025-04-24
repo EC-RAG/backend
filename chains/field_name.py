@@ -35,7 +35,10 @@ prompt = PromptTemplate(
     '''
 )
 
-field_name_chain = prompt | llm
+field_name_chain = LLMChain(
+    llm=llm,
+    prompt=prompt,
+)
 
 # # test
 # response = field_name_chain.invoke({
