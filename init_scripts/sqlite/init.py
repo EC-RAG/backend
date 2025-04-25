@@ -3,10 +3,10 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from utils.table_info import add_table_info
+from db.sqlite import engine, TableInfo, session
 
 # 数据概览（日表）
-add_table_info(
+table = TableInfo(
     table_name='summary_data_day',
     table_define_sql='''
 CREATE TABLE summary_data_day (
@@ -113,3 +113,6 @@ summary_data_day 是概览数据（日）的表，里面包含下面几个字段
 - 投放消耗 (ad_fee): 广告投放消耗 | float
 '''
 )
+
+session.add(table)
+session.commit()
