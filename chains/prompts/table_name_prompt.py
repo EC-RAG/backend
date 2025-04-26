@@ -5,18 +5,17 @@ from data.sql_data_manage import *
 class CustomPromptTemplate(PromptTemplate):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.db = session
     
     def format(self, **kwargs):
-        tables = get_table_info(self.db)
+        tables = get_table_info(session)
         table_names = [table.table_name for table in tables]
         table_names = ", ".join(table_names)
 
-        table_aliases = get_table_alias(self.db)
+        table_aliases = get_table_alias(session)
         table_aliases = [f"原名：{alias.table_name}，别名：{alias.table_alias}" for alias in table_aliases]
         table_aliases = "\n".join(table_aliases)
 
-        rules = get_prompt_rule(self.db, step_type="tablename")
+        rules = get_prompt_rule(session, step_type="tablename")
         rules = [f"{id}.{rule.content}" for id, rule in enumerate(rules)]
         rules = "\n".join(rules)
 

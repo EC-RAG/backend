@@ -48,27 +48,36 @@ def get_table_alias(db: Session, table_name: str = None):
         print(e)
     return all_alias
 
-def update_table_alias(db: Session, table_name: str, table_alias: str, level: str):
+def create_table_alias(db: Session,table_name: str, table_alias: str, level: str):
     try:
-        table_alias_info = db.query(TableAlias).filter(TableAlias.table_name == table_name).first()
-        if table_alias_info:
-            table_alias_info.table_alias = table_alias
-            table_alias_info.level = level
-        else:
-            new_table_alias = TableAlias(
-                table_name=table_name,
-                table_alias=table_alias,
-                level=level
-            )
-            db.add(new_table_alias)
+        new_table_alias = TableAlias(
+            table_name=table_name,
+            table_alias=table_alias,
+            level=level
+        )
+        db.add(new_table_alias)
         db.commit()
     except Exception as e:
         print(e)
         db.rollback()
 
-def delete_table_alias(db: Session, table_name: str):
+def update_table_alias(db: Session, id:int, table_name: str, table_alias: str, level: str):
     try:
-        table_alias_info = db.query(TableAlias).filter(TableAlias.table_name == table_name).first()
+        table_alias_info = db.query(TableAlias).filter(TableAlias.id == id).first()
+        if table_alias_info:
+            table_alias_info.table_name = table_name
+            table_alias_info.table_alias = table_alias
+            table_alias_info.level = level
+        else:
+            raise ValueError("Table alias not found")
+        db.commit()
+    except Exception as e:
+        print(e)
+        db.rollback()
+
+def delete_table_alias(db: Session, id: int):
+    try:
+        table_alias_info = db.query(TableAlias).filter(TableAlias.id == id).first()
         if table_alias_info:
             db.delete(table_alias_info)
             db.commit()
@@ -98,9 +107,9 @@ def create_prompt_rule(db: Session, step_type: str, level: str, content: str):
         print(e)
         db.rollback()
 
-def update_prompt_rule(db: Session, rule_id: int, step_type: str, level: str, content: str):
+def update_prompt_rule(db: Session, id: int, step_type: str, level: str, content: str):
     try:
-        prompt_rule = db.query(PromptRule).filter(PromptRule.id == rule_id).first()
+        prompt_rule = db.query(PromptRule).filter(PromptRule.id == id).first()
         if prompt_rule:
             prompt_rule.step_type = step_type
             prompt_rule.level = level
@@ -112,9 +121,9 @@ def update_prompt_rule(db: Session, rule_id: int, step_type: str, level: str, co
         print(e)
         db.rollback()
 
-def delete_prompt_rule(db: Session, rule_id: int):
+def delete_prompt_rule(db: Session, id: int):
     try:
-        prompt_rule = db.query(PromptRule).filter(PromptRule.id == rule_id).first()
+        prompt_rule = db.query(PromptRule).filter(PromptRule.id == id).first()
         if prompt_rule:
             db.delete(prompt_rule)
             db.commit()

@@ -2,8 +2,9 @@ from chains import table_name_chain, field_name_chain, sql_generate_chain, graph
 from chains.tools import table_name_tool
 from chains.documents import database_document
 from chains.tools import execute_sql
-from utils.table_info import get_table_info
 from utils import dicts_to_markdown_table
+from data.sql_data_manage import get_table_info
+from db.sqlite import session
 
 from data import load_data_to_df
 
@@ -31,7 +32,7 @@ async def get_filed_name(query:str, table_name:str):
     
 
 async def generate_sql(query:str, table_name:str):
-    table_info = get_table_info(table_name)
+    table_info = get_table_info(session, table_name)
 
     # 表头 + 前三行
     table_head = execute_sql(f'SELECT * FROM {table_name} LIMIT 3;')

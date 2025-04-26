@@ -11,7 +11,7 @@ from utils.config import config
 
 # 创建数据库引擎
 db_path = os.path.join(config['data_path'], 'server.db')
-engine = create_engine(f"sqlite:///{db_path}", echo=True)
+engine = create_engine(f"sqlite:///{db_path}", echo=False)
 
 # 创建基础类
 Base = declarative_base()
