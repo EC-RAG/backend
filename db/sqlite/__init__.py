@@ -16,8 +16,12 @@ engine = create_engine(f"sqlite:///{db_path}", echo=True)
 # 创建基础类
 Base = declarative_base()
 
+class Serialize:
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 # 定义 TableInfo 模型
-class TableInfo(Base):
+class TableInfo(Base, Serialize):
     __tablename__ = 'table_info'
 
     table_name = Column(String, primary_key=True)  # 表名
@@ -31,7 +35,7 @@ class RecordLevel(enum.Enum):
     system = "system"
     user = "user"
 
-class TableAlias(Base):
+class TableAlias(Base, Serialize):
     __tablename__ = 'table_alias'
 
     table_name = Column(String, ForeignKey('table_info.table_name'), primary_key=True)  # 表名
@@ -46,7 +50,7 @@ class StepType(enum.Enum):
     sql = "sql"
     graph = "graph"
 
-class PromptRule(Base):
+class PromptRule(Base, Serialize):
     __tablename__ = 'prompt_rule'
 
     id = Column(Integer, primary_key=True, autoincrement=True) # 主键

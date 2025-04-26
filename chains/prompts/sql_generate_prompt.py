@@ -1,5 +1,10 @@
 from langchain.prompts import PromptTemplate
 
+
+
+
+
+
 sql_generate_prompt = PromptTemplate(
     input_variables=['query', 'table_name', 'table_def_sql', 'table_head', 'table_field_info'],
     template='''
