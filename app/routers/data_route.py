@@ -1,110 +1,134 @@
 from typing import List
 from fastapi import APIRouter, Depends, Query, Path, Response
 
-from ..schemas.data_schema import TableData, TableAlias, AliasQuery, TableAliasResponse
+from ..schemas.data_schema import *
+from ..dependence import *
 
-import os
-import sys
+from data.sql_data_manage import *
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+data_router = APIRouter(prefix="/data", tags=["data"])
 
-from data.table_manage import get_all_table, add_table_info, remove_table_info, update_table_info, get_all_table_alias_in_vdb, \
-    get_all_table_invdb, get_table_alias, table_name_collection
+@data_router.get("/alltableinfo", response_model=List[TableData], tags=["tableinfo"])
+async def handle_get_all_tables():
+    return get_table_info()
 
-data_router = APIRouter(prefix="/data")
-
-@data_router.get("/all", response_model=List[TableData], tags=["data"])
-async def get_all_tables():
-    return get_all_table()
-
-@data_router.post("/addtable", tags=["data"])
-async def add_table(data: TableData):
+@data_router.post("/addtableinfo", tags=["tableinfo"])
+async def handle_add_table(data: TableData, db:Session = Depends(get_db)):
     try:
-        add_table_info(data.table_name, data.table_define_sql, data.table_field_info)
+        update_table_info(db, **data.dict())
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return True
 
-@data_router.get("/rmtable", tags=["data"])
-async def remove_table(table_name: str = Query(..., description="Table name to remove")):
+@data_router.get("/rmtable", tags=["tableinfo"])
+async def handle_remove_table(table_name: str = Query(..., description="Table name to remove"), db:Session = Depends(get_db)):
     try:
-        remove_table_info(table_name)
+        delete_table_info(db, table_name)
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return True
 
-@data_router.post("/edittable", tags=["data"])
-async def update_table(data: TableData):
+@data_router.post("/edittable", tags=["tableinfo"])
+async def handle_update_table(data: TableData, db:Session = Depends(get_db)):
     try:
-        update_table_info(data.table_name, data.table_define_sql, data.table_field_info)
+        update_table_info(db, **data.dict())
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return True
 
-@data_router.get("/gettable", tags=["data"])
-async def get_table(table_name: str = Query(..., description="Table name to get")):
+@data_router.get("/gettable", tags=["tableinfo"])
+async def handle_get_table(table_name: str = Query(..., description="Table name to get"), db:Session = Depends(get_db)):
     try:
-        table_info = get_all_table()
-        target_tables = []
-        for table in table_info:
-            if table_name in table['table_name']:
-                target_tables.append(table)
+        target_tables = get_table_info(db, table_name)
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return target_tables
 
-@data_router.get("/allalias", response_model=List[TableAlias], tags=["data"])
-async def get_table_field():
+@data_router.get("/allalias", response_model=List[TableAlias], tags=["alias"])
+async def handle_get_table_alias(db:Session = Depends(get_db)):
     try:
-        table_alias = get_all_table_alias_in_vdb()
+        table_alias = get_table_alias(db)
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return table_alias
 
-@data_router.get("/gettabletags", response_model=list[str], tags=["data"])
-async def get_table_tags():
+@data_router.get("/tabletags", response_model=list[str], tags=["alias"])
+async def handle_get_table_tags(db:Session = Depends(get_db)):
     try:
-        tags = get_all_table_invdb()
+        table_alias = get_table_alias(db)
+        tags = set(map(lambda x: x["table_name"], table_alias))
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return tags
 
-@data_router.get("/gettablealias", response_model=List[TableAlias], tags=["data"])
-async def table_alias(table_name: str = Query(..., description="Table name to get alias")):
+@data_router.get("/rmalias", tags=["alias"])
+async def handle_remove_alias(table_name: str = Query(..., description="Table name to remove alias"), db:Session = Depends(get_db)):
     try:
-        table_alias = get_table_alias(table_name)
-    except Exception as e:
-        return Response(content=e.__str__, status_code=500)
-    return table_alias
-
-@data_router.get("/rmalias", tags=["data"])
-async def remove_alias(table_name: str = Query(..., description="Table name to remove alias")):
-    try:
-        table_name_collection.delete(table_name)
+        delete_table_alias(db, table_name)
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return True
 
-@data_router.get("/addalias", tags=["data"])
-async def add_alias(table_name: str = Query(..., description="Table name to add alias"),
-                    table_alias: str = Query(..., description="Table alias")):
+@data_router.post("/editalias", tags=["alias"])
+async def edit_alias(alias: TableAliasCreate, db:Session = Depends(get_db)):
     try:
-        table_name_collection.add(table_name, table_alias)
+        update_table_alias(db, **alias.dict(), level='user')
+    except Exception as e:
+        return Response(content=str(e), status_code=500)
+    return True
+
+@data_router.post("/addalias", tags=["alias"])
+async def add_alias(alias: TableAliasCreate, db:Session = Depends(get_db)):
+    try:
+        update_table_alias(db, **alias.dict(), level='user')
+    except Exception as e:
+        return Response(content=str(e), status_code=500)
+    return True
+
+@data_router.get("/getalias", response_model=List[TableAlias], tags=["alias"])
+async def handle_get_alias(table_name: str = Query(..., description="Table name to get alias"), db:Session = Depends(get_db)):
+    try:
+        target_alias = get_table_alias(db, table_name)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return target_alias
+
+@data_router.get("/allrules", response_model=List[RuleData], tags=["rule"])
+async def handle_get_all_rules(db:Session = Depends(get_db)):
+    try:
+        all_rules = get_prompt_rule(db)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return all_rules
+
+data_router.get("/getrule", response_model=List[RuleData], tags=["rule"])
+async def handle_get_rule(step_type: str = Query(..., description="Step type to get rule"), db:Session = Depends(get_db)):
+    try:
+        all_rules = get_prompt_rule(db, step_type)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return all_rules
+
+data_router.post("/addrule", tags=["rule"])
+async def handle_add_rule(rule: RuleCreate, db:Session = Depends(get_db)):
+    try:
+        create_prompt_rule(db, **rule.dict(), level='user')
     except Exception as e:
         return Response(content=e.__str__, status_code=500)
     return True
 
-@data_router.get("/aliasquery", response_model=List[TableAliasResponse],tags=["data"])
-async def alias_query(query: str = Query(..., description="Query to search for table alias"),
-                      top_k: int = Query(2, description="Number of top results to return")):
-    query_result = table_name_collection.query(query, n_results=top_k)
-    items = []
-    for i in range(len(query_result['ids'][0])):
-        item = {
-            'id': query_result['ids'][0][i],
-            'distance': query_result['distances'][0][i],
-            'document': query_result['documents'][0][i],
-            'metadata': query_result['metadatas'][0][i],
-        }
-        items.append(item)
-    return items
+data_router.post("/editrule", tags=["rule"])
+async def handle_edit_rule(rule: RuleUpdate, db:Session = Depends(get_db)):
+    try:
+        update_prompt_rule(db, **rule.dict(), level='user')
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return True
+
+data_router.get("/rmmrule", tags=["rule"])
+async def handle_remove_rule(rule_id: int = Query(..., description="Rule ID to remove"), db:Session = Depends(get_db)):
+    try:
+        delete_prompt_rule(db, rule_id)
+    except Exception as e:
+        return Response(content=e.__str__, status_code=500)
+    return True

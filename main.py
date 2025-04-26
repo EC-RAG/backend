@@ -23,4 +23,9 @@ from fastapi.staticfiles import StaticFiles
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=False, workers=None)
+    # 获取环境变量
+    env = os.getenv("ENV", "development")  # 默认值为 "production"
+
+    # 根据环境变量设置 reload 参数
+    reload = env == "development"
+    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=reload, workers=None)

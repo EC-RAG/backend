@@ -7,16 +7,27 @@ class TableData(BaseModel):
 
 class TableAlias(BaseModel):
     id: str
-    embedding: list[float]
-    document: str
-    metadata: dict
+    table_name: str
+    table_alias: str
+    level: str
+    create_at: str
 
-class AliasQuery(BaseModel):
-    query: str
-    top_k: int
+class TableAliasCreate(BaseModel):
+    table_name: str
+    table_alias: str
 
-class TableAliasResponse(BaseModel):
-    id: str
-    distance: float
-    document: str
-    metadata: dict
+class RuleData(BaseModel):
+    id: int
+    step_type: str
+    level: str
+    content: str
+    create_at: str
+
+class RuleCreate(BaseModel):
+    step_type: str
+    content: str
+
+class RuleUpdate(BaseModel):
+    id: int
+    step_type: str
+    content: str

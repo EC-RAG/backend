@@ -38,7 +38,8 @@ class RecordLevel(enum.Enum):
 class TableAlias(Base, Serialize):
     __tablename__ = 'table_alias'
 
-    table_name = Column(String, ForeignKey('table_info.table_name'), primary_key=True)  # 表名
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    table_name = Column(String, ForeignKey('table_info.table_name'))  # 表名
     table_alias = Column(String, nullable=False)  # 表别名
     level = Column(Enum(RecordLevel, name='level_enum', native_enum=False), nullable=False) # 记录级别 system/user
     create_at = Column(DateTime, default=datetime.utcnow, nullable=False)  # 创建时间
@@ -62,5 +63,5 @@ class PromptRule(Base, Serialize):
 Base.metadata.create_all(engine)
 
 # 创建会话工厂
-Session = sessionmaker(bind=engine)
-session = Session()
+SessionLocal = sessionmaker(bind=engine)
+session = SessionLocal()
