@@ -45,3 +45,12 @@ def text_split(content: str, chunk_size: int = 500, chunk_overlap: int = 50) -> 
     docs = text_splitter.create_documents([content])
     chunks = [doc.page_content for doc in docs]
     return chunks
+
+def dict_to_list(data: dict, include:list) -> list:
+    """
+    将字典转换为列表
+    :param data: 要转换的字典
+    :param include: 包含的键列表
+    :return: 转换后的列表
+    """
+    return [{key: data.get(key)[index] for key in include} for index in range(len(data.get(include[0])))]

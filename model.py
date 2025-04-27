@@ -1,4 +1,4 @@
-from chains import table_name_chain, field_name_chain, sql_generate_chain, graph_type_chain
+from chains import table_name_chain, sql_generate_chain, graph_type_chain
 from chains.tools import table_name_tool
 from chains.tools import execute_sql
 from utils import dicts_to_markdown_table

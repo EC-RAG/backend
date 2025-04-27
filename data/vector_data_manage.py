@@ -48,9 +48,9 @@ def delete_document(title: str):
         print(e)
         return False
     
-def query_document(query: str):
+def query_document(query: str, top_k: int = 2) -> dict:
     try:
-        docs = document_collection.query(query)
+        docs = document_collection.query(query, top_k)
         return docs
     except Exception as e:
         print(e)
