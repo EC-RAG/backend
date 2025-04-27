@@ -63,10 +63,13 @@ async def handle_remove_doc(title: str = Query(..., description="Document title 
         return Response(content=e.__str__(), status_code=500)
     return True
 
-@vdb_router.get("/querydoc", response_model=List[DocSliceResponse])
+@vdb_router.get("/querydoc", response_model=List[DocQueryResponse])
 async def handle_query_doc(query: str = Query(..., description="Query string to search for")):
     try:
         documents = query_document(query)
+        documents['metadatas'] = documents['metadatas'][0]
+        documents['documents'] = documents['documents'][0]
+        documents['distances'] = documents['distances'][0]
         resp = dict_to_list(documents, ['distances', 'metadatas', 'documents'])
         resp = [
             {
@@ -78,4 +81,4 @@ async def handle_query_doc(query: str = Query(..., description="Query string to 
         ]
     except Exception as e:
         return Response(content=e.__str__(), status_code=500)
-    return documents
+    return resp
