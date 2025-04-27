@@ -1,6 +1,5 @@
 from chains import table_name_chain, field_name_chain, sql_generate_chain, graph_type_chain
 from chains.tools import table_name_tool
-from chains.documents import database_document
 from chains.tools import execute_sql
 from utils import dicts_to_markdown_table
 from data.sql_data_manage import get_table_info
@@ -17,19 +16,6 @@ async def get_table_name(query:str):
     vague_table_name = llm_response
     table_name = table_name_tool.invoke(vague_table_name)
     return table_name
-
-async def get_filed_name(query:str, table_name:str):
-    table_info = database_document[table_name]
-    llm_response = await field_name_chain.arun({
-        'query': query,
-        'name': table_info['name'],
-        'text': table_info['text'],
-        'important': table_info['important'],
-        'knowledge': table_info['knowledge']
-    })
-
-    return llm_response['text']
-    
 
 async def generate_sql(query:str, table_name:str):
     table_info = get_table_info(session, table_name)
