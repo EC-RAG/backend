@@ -1,30 +1,7 @@
 from langchain.prompts import PromptTemplate
-from db.sqlite import session
 
-from data.sql_data_manage import *
-class CustomPromptTemplate(PromptTemplate):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    
-    def format(self, **kwargs):
-        tables = get_table_info(session)
-        table_names = [table.table_name for table in tables]
-        table_names = ", ".join(table_names)
-
-        table_aliases = get_table_alias(session)
-        table_aliases = [f"原名：{alias.table_name}，别名：{alias.table_alias}" for alias in table_aliases]
-        table_aliases = "\n".join(table_aliases)
-
-        rules = get_prompt_rule(session, step_type="tablename")
-        rules = [f"{id}.{rule.content}" for id, rule in enumerate(rules)]
-        rules = "\n".join(rules)
-
-        return super().format(table_names=table_names, table_aliases=table_aliases, rules=rules, **kwargs)
-
-
-
-table_name_prompt = CustomPromptTemplate(
-    input_variables=["query"],
+table_name_prompt = PromptTemplate(
+    input_variables=["query",'table_aliases', 'rules', 'table_names'],
     template='''
     <system>
         你是一个语义搜索引擎，你的任务是提取用户查询语句中的表名。
