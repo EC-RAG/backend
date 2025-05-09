@@ -1,0 +1,20 @@
+database:
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    user: 
+    password: 
+  
+  chromadb:
+    name: chromadb.db
+
+models:
+  llm:
+    type: deepseek 
+    api_key: 
+    model: deepseek-chat
+
+  embedding:
+    base_url: https://ark.cn-beijing.volces.com/api/v3
+    api_key: 
+    model: doubao-embedding-text-240715

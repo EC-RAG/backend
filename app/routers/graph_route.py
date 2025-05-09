@@ -22,7 +22,6 @@ async def gen_graph(ws: WebSocket):
         sql = await client.generate_sql()
         await ws.send_json({"type":'sql',"data": sql})
         data = client.load_data()
-        print(convert_array_to_list(data.head().to_dict()))
         await ws.send_json({"type":'data',"data": {"data": convert_array_to_list(data.head().to_dict())}})
         res = await client.generate_graph()
         res = convert_array_to_list(res)

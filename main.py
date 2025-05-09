@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
     # 根据环境变量设置 reload 参数
     reload = env == "development"
-    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=reload, workers=None)
+    uvicorn.run('main:app', host="0.0.0.0", port=8188, reload=reload, workers=None)
