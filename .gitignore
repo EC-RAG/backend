@@ -176,3 +176,5 @@ config.yaml
 *.db
 
 frontend
+
+logs

@@ -9,6 +9,19 @@ from data.sql_data_manage import *
 from data.vector_data_manage import *
 from data import load_data_to_df
 from utils import dicts_to_markdown_table
+from loguru import logger
+
+from langchain.callbacks.base import AsyncCallbackHandler
+
+class LoggingCallbackHandler(AsyncCallbackHandler):
+    async def on_llm_start(self, *args, **kwargs):
+        logger.info(args[1][0])
+
+    async def on_llm_end(self, response, **kwargs):
+        generations = response.generations
+        if generations and generations[0]:
+            reply = generations[0][0].text
+            logger.info(f"[LLM Response] >>>\n{reply}")
 
 class RAGClient:
     def __init__(self, query:str):
@@ -32,11 +45,13 @@ class RAGClient:
         rules = "\n".join(rules)
 
         llm_response = await self.table_name_chain.arun({
-            'query': self.query,
-            'table_aliases': table_aliases,
-            'table_names': table_names,
-            'rules': rules
-        })
+                'query': self.query,
+                'table_aliases': table_aliases,
+                'table_names': table_names,
+                'rules': rules
+            },
+            callbacks=[LoggingCallbackHandler()]
+        )
         self.table_name = llm_response
         return self.table_name
     
@@ -56,14 +71,16 @@ class RAGClient:
         related_doc = '\n'.join(related_doc['documents'][0])
 
         llm_response = await self.sql_generate_chain.arun({
-            'query': self.query,
-            'table_name': self.table_name,
-            'table_def_sql': table_info['table_define_sql'],
-            'table_head': table_head,
-            'table_field_info': table_info['table_field_info'],
-            'related_doc': related_doc,
-            'rules': rules
-        })
+                'query': self.query,
+                'table_name': self.table_name,
+                'table_def_sql': table_info['table_define_sql'],
+                'table_head': table_head,
+                'table_field_info': table_info['table_field_info'],
+                'related_doc': related_doc,
+                'rules': rules
+            },
+            callbacks=[LoggingCallbackHandler()]
+        )
 
         self.sql = llm_response
         return self.sql
@@ -71,6 +88,7 @@ class RAGClient:
     def load_data(self):
         try:
             self.data = load_data_to_df(self.sql)
+            logger.info(f"data: {self.data}")
             return self.data
         except Exception as e:
             print(e)
@@ -82,10 +100,12 @@ class RAGClient:
         rules = "\n".join(rules)
 
         llm_response = await self.graph_type_chain.arun({
-            'query': self.query,
-            'data_schema': self.data.head(),
-            'rules': rules
-        }) 
+                'query': self.query,
+                'data_schema': self.data.head(),
+                'rules': rules
+            },
+            callbacks=[LoggingCallbackHandler()]
+        ) 
 
         context = {
             'data': self.data,
@@ -93,5 +113,7 @@ class RAGClient:
         }
         print('llm_response', llm_response)
         exec(llm_response, context)
+
+        logger.info(f"graph: \n{context['fig']}")
 
         return context['fig'].to_plotly_json()

@@ -1,5 +1,6 @@
 import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+import datetime
 
 def dicts_to_markdown_table(data):
     if not data:
@@ -25,7 +26,9 @@ def convert_array_to_list(data):
     elif isinstance(data, list):  # 如果是列表，遍历列表中的每个元素
         return [convert_array_to_list(item) for item in data]
     elif isinstance(data, np.ndarray):  # 如果是 numpy 数组，转换为列表
-        return data.tolist()
+        return convert_array_to_list(data.tolist())
+    elif isinstance(data, datetime.date):  # 如果是日期
+        return data.strftime("%Y-%m-%d")  # 转换为字符串格式
     else:
         return data  # 否则，返回原始值
     
