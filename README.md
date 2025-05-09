@@ -3,7 +3,7 @@
 ### docker
 
 ```bash
-docker run -d ghcr.io/ec-rag/ec-rag:latest -v path/to/your/config:/app/config.yaml
+docker run -d -v path/to/your/config:/app/config.yaml --network host ghcr.io/ec-rag/ec-rag:latest
 ```
 
 ### source code
